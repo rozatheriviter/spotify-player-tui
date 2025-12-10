@@ -21,6 +21,7 @@ pub fn handle_key_sequence_for_page(
         .find_command_or_action_from_key_sequence(key_sequence)
     {
         Some(CommandOrAction::Command(command)) => match page_type {
+            PageType::Home => handle_command_for_home_page(command, client_pub, ui, state),
             PageType::Search => anyhow::bail!("page search type should already be handled!"),
             PageType::Library => handle_command_for_library_page(command, client_pub, ui, state),
             PageType::Context => handle_command_for_context_page(command, client_pub, ui, state),
@@ -41,6 +42,55 @@ pub fn handle_key_sequence_for_page(
         },
         _ => Ok(false),
     }
+}
+
+fn handle_command_for_home_page(
+    command: Command,
+    client_pub: &flume::Sender<ClientRequest>,
+    ui: &mut UIStateGuard,
+    state: &SharedState,
+) -> Result<bool> {
+    use crate::state::HOME_PAGE_OPTIONS;
+    let count = ui.count_prefix;
+    let page_state = ui.current_page_mut();
+    let selected = page_state.selected().unwrap_or_default();
+    let len = HOME_PAGE_OPTIONS.len();
+
+    if handle_navigation_command(command, page_state, selected, len, count) {
+        return Ok(true);
+    }
+
+    if command == Command::ChooseSelected {
+        match HOME_PAGE_OPTIONS[selected] {
+            "Library" => {
+                handle_global_command(Command::LibraryPage, client_pub, state, ui)?;
+            }
+            "Search" => {
+                handle_global_command(Command::SearchPage, client_pub, state, ui)?;
+            }
+            "Browse" => {
+                handle_global_command(Command::BrowsePage, client_pub, state, ui)?;
+            }
+            "Recently Played" => {
+                handle_global_command(Command::RecentlyPlayedTrackPage, client_pub, state, ui)?;
+            }
+            "Liked Tracks" => {
+                handle_global_command(Command::LikedTrackPage, client_pub, state, ui)?;
+            }
+            "Lyrics" => {
+                handle_global_command(Command::LyricsPage, client_pub, state, ui)?;
+            }
+            "Queue" => {
+                handle_global_command(Command::Queue, client_pub, state, ui)?;
+            }
+            "Help" => {
+                handle_global_command(Command::OpenCommandHelp, client_pub, state, ui)?;
+            }
+            _ => return Ok(false),
+        }
+        return Ok(true);
+    }
+    Ok(false)
 }
 
 fn handle_action_for_library_page(

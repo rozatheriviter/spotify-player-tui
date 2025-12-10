@@ -126,6 +126,7 @@ fn render_main_layout(
 ) {
     let page_type = ui.current_page().page_type();
     match page_type {
+        PageType::Home => page::render_home_page(frame, ui, rect),
         PageType::Library => page::render_library_page(is_active, frame, state, ui, rect),
         PageType::Search => page::render_search_page(is_active, frame, state, ui, rect),
         PageType::Context => page::render_context_page(is_active, frame, state, ui, rect),

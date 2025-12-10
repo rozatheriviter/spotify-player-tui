@@ -88,6 +88,10 @@ impl Default for KeymapConfig {
                     command: Command::ChooseSelected,
                 },
                 Keymap {
+                    key_sequence: "right".into(),
+                    command: Command::ChooseSelected,
+                },
+                Keymap {
                     key_sequence: "r".into(),
                     command: Command::RefreshPlayback,
                 },
@@ -194,6 +198,10 @@ impl Default for KeymapConfig {
                 },
                 Keymap {
                     key_sequence: "backspace".into(),
+                    command: Command::PreviousPage,
+                },
+                Keymap {
+                    key_sequence: "left".into(),
                     command: Command::PreviousPage,
                 },
                 Keymap {
