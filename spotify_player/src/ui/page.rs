@@ -17,6 +17,7 @@ use super::{
 };
 use crate::state::BidiDisplay;
 use crate::ui::utils::to_bidi_string;
+use crate::state::HOME_PAGE_OPTIONS;
 
 const COMMAND_TABLE_CONSTRAINTS: [Constraint; 3] = [
     Constraint::Percentage(25),
@@ -30,6 +31,19 @@ const COMMAND_TABLE_CONSTRAINTS: [Constraint; 3] = [
 // 2. construct the page's layout
 // 3. construct the page's widgets
 // 4. render the widgets
+
+pub fn render_home_page(frame: &mut Frame, ui: &mut UIStateGuard, rect: Rect) {
+    let rect = construct_and_render_block("Home", &ui.theme, Borders::ALL, frame, rect);
+    let items = HOME_PAGE_OPTIONS
+        .iter()
+        .map(|s| (s.to_string(), false))
+        .collect();
+    let (list, len) = utils::construct_list_widget(&ui.theme, items, true);
+
+    if let PageState::Home { state } = ui.current_page_mut() {
+        utils::render_list_window(frame, list, rect, len, state);
+    }
+}
 
 pub fn render_search_page(
     is_active: bool,

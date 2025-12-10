@@ -4,8 +4,22 @@ use crate::{
 };
 use ratatui::widgets::{ListState, TableState};
 
+pub const HOME_PAGE_OPTIONS: &[&str] = &[
+    "Library",
+    "Search",
+    "Browse",
+    "Recently Played",
+    "Liked Tracks",
+    "Lyrics",
+    "Queue",
+    "Help",
+];
+
 #[derive(Clone, Debug)]
 pub enum PageState {
+    Home {
+        state: ListState,
+    },
     Library {
         state: LibraryPageUIState,
     },
@@ -37,6 +51,7 @@ pub enum PageState {
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub enum PageType {
+    Home,
     Library,
     Context,
     Search,
@@ -140,6 +155,7 @@ impl PageState {
     /// The type of the page.
     pub fn page_type(&self) -> PageType {
         match self {
+            PageState::Home { .. } => PageType::Home,
             PageState::Library { .. } => PageType::Library,
             PageState::Context { .. } => PageType::Context,
             PageState::Search { .. } => PageType::Search,
@@ -166,6 +182,7 @@ impl PageState {
     /// The currently focused window state of the page.
     pub fn focus_window_state_mut(&mut self) -> Option<MutableWindowState<'_>> {
         match self {
+            Self::Home { state } => Some(MutableWindowState::List(state)),
             Self::Library {
                 state:
                     LibraryPageUIState {
@@ -355,7 +372,7 @@ impl Focusable for PageState {
                 state: Some(ContextPageUIState::Artist { focus, .. }),
                 ..
             } => focus.next(),
-            _ => {}
+            _ => return,
         }
 
         // reset the list/table state of the focus window
@@ -378,7 +395,7 @@ impl Focusable for PageState {
                 state: Some(ContextPageUIState::Artist { focus, .. }),
                 ..
             } => focus.previous(),
-            _ => {}
+            _ => return,
         }
 
         // reset the list/table state of the focus window

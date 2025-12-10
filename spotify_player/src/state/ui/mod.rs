@@ -113,8 +113,8 @@ impl Default for UIState {
                 }
             },
 
-            history: vec![PageState::Library {
-                state: LibraryPageUIState::new(),
+            history: vec![PageState::Home {
+                state: ratatui::widgets::ListState::default(),
             }],
             popup: None,
 
