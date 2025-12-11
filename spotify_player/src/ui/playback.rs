@@ -3,6 +3,7 @@ use super::{
     LineGauge, Modifier, Paragraph, PlaybackMetadata, Rect, SharedState, Span, Style, Text,
     UIStateGuard, Wrap,
 };
+use ratatui::widgets::{BarChart, Block};
 #[cfg(feature = "image")]
 use crate::state::ImageRenderInfo;
 use crate::ui::utils::{format_genres, to_bidi_string};
@@ -115,8 +116,47 @@ pub fn render_playback_window(
 
             if let Some(ref playback) = player.buffered_playback {
                 let playback_text = construct_playback_text(ui, state, item, playback);
+
+                // Reserve some space for the visualizer on the right side of the metadata
+                let chunks = Layout::horizontal([Constraint::Fill(1), Constraint::Length(20)]).split(metadata_rect);
+                let metadata_text_rect = chunks[0];
+                let visualizer_rect = chunks[1];
+
                 let playback_desc = Paragraph::new(playback_text);
-                frame.render_widget(playback_desc, metadata_rect);
+                frame.render_widget(playback_desc, metadata_text_rect);
+
+                // Render a mini visualizer
+                let time = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis();
+
+                let n_bars = visualizer_rect.width / 2; // bars are 1 char wide + 1 gap, so / 2 roughly
+                if n_bars > 0 {
+                    let data: Vec<(&str, u64)> = (0..n_bars)
+                        .map(|i| {
+                            let x = i as f64;
+                            let t = time as f64 / 100.0;
+
+                            // Simplified sine wave for mini visualizer
+                            let wave = ((x * 0.5 + t * 0.8).sin() + 1.0) * 4.0;
+                            let noise = ((i * 3) % 5) as f64;
+
+                            let val = (wave + noise) as u64;
+                            ("", val.min(8))
+                        })
+                        .collect();
+
+                    let barchart = BarChart::default()
+                        .block(Block::default().borders(Borders::NONE))
+                        .data(&data)
+                        .bar_width(1)
+                        .bar_gap(1)
+                        .bar_style(ui.theme.playback_progress_bar())
+                        .value_style(ui.theme.playback_progress_bar_unfilled());
+
+                    frame.render_widget(barchart, visualizer_rect);
+                }
             }
 
             let duration = match item {

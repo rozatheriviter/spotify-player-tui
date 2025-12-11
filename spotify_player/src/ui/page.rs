@@ -645,7 +645,8 @@ pub fn render_playback_page(
     let rect = construct_and_render_block("Playback", &ui.theme, Borders::ALL, frame, rect);
 
     // Split into top (info/cover) and bottom (visualizer)
-    let chunks = Layout::vertical([Constraint::Min(10), Constraint::Percentage(30)]).split(rect);
+    // Make visualizer take all remaining space to give it a "full page" feel
+    let chunks = Layout::vertical([Constraint::Min(10), Constraint::Fill(1)]).split(rect);
     let top_rect = chunks[0];
     let visualizer_rect = chunks[1];
 
