@@ -661,10 +661,25 @@ pub fn render_playback_page(
         .unwrap()
         .as_millis();
 
-    let data: Vec<(&str, u64)> = (0..20).map(|i| {
-        let val = (time / 100 + i as u128 * 50) % 100;
-        ("", val as u64)
-    }).collect();
+    let n_bars = visualizer_rect.width / 4;
+    let data: Vec<(&str, u64)> = (0..n_bars)
+        .map(|i| {
+            // Create a more organic wave pattern using sine waves
+            let x = i as f64;
+            let t = time as f64 / 100.0;
+
+            // Combine multiple sine waves for a more complex pattern
+            let wave1 = ((x * 0.2 + t * 0.5).sin() + 1.0) * 30.0;
+            let wave2 = ((x * 0.5 - t * 0.8).sin() + 1.0) * 15.0;
+            let wave3 = ((x * 0.1 + t * 0.2).sin() + 1.0) * 5.0;
+
+            // Add some noise based on index to simulate frequency bands
+            let noise = ((i * 7) % 13) as f64;
+
+            let val = (wave1 + wave2 + wave3 + noise) as u64;
+            ("", val.min(100))
+        })
+        .collect();
 
     let barchart = BarChart::default()
         .block(Block::default().borders(Borders::NONE))
