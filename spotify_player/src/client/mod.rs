@@ -806,18 +806,10 @@ impl AppClient {
 
     /// Get all playlists of the current user
     pub async fn current_user_playlists(&self) -> Result<Vec<Playlist>> {
-        // TODO: this should use `rspotify::current_user_playlists_manual` API instead of `internal_call`
-        // See: https://github.com/ramsayleung/rspotify/issues/459
         // Fetch the first page of playlists
         let first_page = self
-            .http_get::<rspotify::model::Page<rspotify::model::SimplifiedPlaylist>>(
-                &format!("{SPOTIFY_API_ENDPOINT}/me/playlists"),
-                &Query::from([("limit", "50")]),
-            )
+            .current_user_playlists_manual(Some(50), None)
             .await?;
-        // let first_page = self
-        //     .current_user_playlists_manual(Some(50), None)
-        //     .await?;
 
         // Fetch all pages of playlists
         let playlists = self.all_paging_items(first_page, &Query::new()).await?;
