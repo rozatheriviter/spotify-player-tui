@@ -1331,16 +1331,8 @@ impl AppClient {
         let playlist_uri = playlist_id.uri();
         tracing::info!("Get playlist context: {}", playlist_uri);
 
-        // TODO: this should use `rspotify::playlist` API instead of `internal_call`
-        // See: https://github.com/ramsayleung/rspotify/issues/459
-        // let playlist = self
-        //     .playlist(playlist_id, None, Some(Market::FromToken))
-        //     .await?;
         let playlist = self
-            .http_get::<rspotify::model::FullPlaylist>(
-                &format!("{SPOTIFY_API_ENDPOINT}/playlists/{}", playlist_id.id()),
-                &market_query(),
-            )
+            .playlist(playlist_id, None, Some(rspotify::model::Market::FromToken))
             .await?;
 
         // get the playlist's tracks
