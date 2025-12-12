@@ -34,7 +34,7 @@ compile_error!("Streaming feature is enabled but no audio backend has been selec
     rodiojack-backend,
     sdl-backend,
     gstreamer-backend
-For more information, visit https://github.com/aome510/spotify-player?tab=readme-ov-file#streaming
+For more information, visit https://github.com/rozatheriviter/spotify-player-tui?tab=readme-ov-file#streaming
 ");
 
 #[derive(Debug, Serialize)]

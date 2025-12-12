@@ -662,7 +662,7 @@ impl AppClient {
         match &self.user_client {
             None => {
                 tracing::warn!("User-provided client integration is not enabled, no device found.");
-                tracing::warn!("Please make sure you setup Spotify Connect as described in https://github.com/aome510/spotify-player#spotify-connect.");
+                tracing::warn!("Please make sure you setup Spotify Connect as described in https://github.com/rozatheriviter/spotify-player-tui#spotify-connect.");
                 Ok(vec![])
             }
             Some(client) => Ok(client.device().await?),
