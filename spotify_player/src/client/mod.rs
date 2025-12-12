@@ -1304,6 +1304,18 @@ impl AppClient {
                 self.remove_users_saved_shows([id], Some(rspotify::model::Market::FromToken))
                     .await?;
             }
+            ItemId::PlaylistFolder(id) => {
+                state
+                    .data
+                    .write()
+                    .user_data
+                    .playlists
+                    .retain(|item| match item {
+                        PlaylistFolderItem::Playlist(_) => true,
+                        PlaylistFolderItem::Folder(f) => f.current_id != id,
+                    });
+                // TODO: persist the change to the disk
+            }
         }
         Ok(())
     }

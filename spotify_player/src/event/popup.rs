@@ -550,6 +550,9 @@ pub fn handle_item_action(
         ActionListItem::Episode(episode, actions) => {
             handle_action_in_context(actions[n], episode.into(), client_pub, &data, ui)
         }
+        ActionListItem::PlaylistFolder(folder, actions) => {
+            handle_action_in_context(actions[n], folder.into(), client_pub, &data, ui)
+        }
     }
 }
 

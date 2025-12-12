@@ -110,6 +110,7 @@ pub enum ItemId {
     Artist(ArtistId<'static>),
     Playlist(PlaylistId<'static>),
     Show(ShowId<'static>),
+    PlaylistFolder(usize),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

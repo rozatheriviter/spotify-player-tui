@@ -177,6 +177,12 @@ impl From<Episode> for ActionContext {
     }
 }
 
+impl From<PlaylistFolder> for ActionContext {
+    fn from(v: PlaylistFolder) -> Self {
+        Self::PlaylistFolder(v)
+    }
+}
+
 impl From<PlaylistFolderItem> for ActionContext {
     fn from(value: PlaylistFolderItem) -> Self {
         match value {
@@ -194,8 +200,7 @@ impl ActionContext {
             Self::Artist(artist) => construct_artist_actions(artist, data),
             Self::Playlist(playlist) => construct_playlist_actions(playlist, data),
             Self::Episode(episode) => construct_episode_actions(episode, data),
-            // TODO: support actions for playlist folders
-            Self::PlaylistFolder(_) => vec![],
+            Self::PlaylistFolder(folder) => construct_playlist_folder_actions(folder, data),
             Self::Show(show) => construct_show_actions(show, data),
         }
     }
@@ -270,6 +275,20 @@ pub fn construct_playlist_actions(playlist: &Playlist, data: &DataReadGuard) -> 
         actions.push(Action::DeleteFromLibrary);
     } else {
         actions.push(Action::AddToLibrary);
+    }
+    actions
+}
+
+/// constructs a list of actions on a playlist folder
+pub fn construct_playlist_folder_actions(
+    folder: &PlaylistFolder,
+    data: &DataReadGuard,
+) -> Vec<Action> {
+    let mut actions = vec![];
+    if data.user_data.playlists.iter().any(|item| {
+        matches!(item, PlaylistFolderItem::Folder(f) if f.current_id == folder.current_id)
+    }) {
+        actions.push(Action::DeleteFromLibrary);
     }
     actions
 }

@@ -524,12 +524,21 @@ pub fn handle_command_for_playlist_list_window(
             }
         }
         Command::ShowActionsOnSelectedItem => {
-            if let PlaylistFolderItem::Playlist(p) = playlists[id] {
-                let actions = construct_playlist_actions(p, data);
-                ui.popup = Some(PopupState::ActionList(
-                    Box::new(ActionListItem::Playlist(p.clone(), actions)),
-                    ListState::default(),
-                ));
+            match playlists[id] {
+                PlaylistFolderItem::Playlist(p) => {
+                    let actions = construct_playlist_actions(p, data);
+                    ui.popup = Some(PopupState::ActionList(
+                        Box::new(ActionListItem::Playlist(p.clone(), actions)),
+                        ListState::default(),
+                    ));
+                }
+                PlaylistFolderItem::Folder(f) => {
+                    let actions = command::construct_playlist_folder_actions(f, data);
+                    ui.popup = Some(PopupState::ActionList(
+                        Box::new(ActionListItem::PlaylistFolder(f.clone(), actions)),
+                        ListState::default(),
+                    ));
+                }
             }
         }
         _ => return false,

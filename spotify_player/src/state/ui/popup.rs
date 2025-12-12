@@ -1,6 +1,8 @@
 use crate::{
     command,
-    state::model::{Album, Artist, Episode, EpisodeId, Playlist, Show, Track, TrackId},
+    state::model::{
+        Album, Artist, Episode, EpisodeId, Playlist, PlaylistFolder, Show, Track, TrackId,
+    },
     ui::single_line_input::LineInput,
 };
 use ratatui::widgets::ListState;
@@ -38,6 +40,7 @@ pub enum ActionListItem {
     Playlist(Playlist, Vec<command::Action>),
     Show(Show, Vec<command::Action>),
     Episode(Episode, Vec<command::Action>),
+    PlaylistFolder(PlaylistFolder, Vec<command::Action>),
 }
 
 /// An action on an item in a playlist popup list
@@ -120,7 +123,8 @@ impl ActionListItem {
             | ActionListItem::Album(.., actions)
             | ActionListItem::Playlist(.., actions)
             | ActionListItem::Show(.., actions)
-            | ActionListItem::Episode(.., actions) => actions.len(),
+            | ActionListItem::Episode(.., actions)
+            | ActionListItem::PlaylistFolder(.., actions) => actions.len(),
         }
     }
 
@@ -132,6 +136,7 @@ impl ActionListItem {
             ActionListItem::Playlist(playlist, ..) => &playlist.name,
             ActionListItem::Show(show, ..) => &show.name,
             ActionListItem::Episode(episode, ..) => &episode.name,
+            ActionListItem::PlaylistFolder(folder, ..) => &folder.name,
         }
     }
 
@@ -142,7 +147,8 @@ impl ActionListItem {
             | ActionListItem::Album(.., actions)
             | ActionListItem::Playlist(.., actions)
             | ActionListItem::Show(.., actions)
-            | ActionListItem::Episode(.., actions) => {
+            | ActionListItem::Episode(.., actions)
+            | ActionListItem::PlaylistFolder(.., actions) => {
                 actions.iter().map(|a| format!("{a:?}")).collect::<Vec<_>>()
             }
         }

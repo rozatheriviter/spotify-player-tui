@@ -457,8 +457,16 @@ pub fn handle_action_in_context(
             }
             _ => Ok(false),
         },
-        // TODO: support actions for playlist folders
-        ActionContext::PlaylistFolder(_) => Ok(false),
+        ActionContext::PlaylistFolder(folder) => match action {
+            Action::DeleteFromLibrary => {
+                client_pub.send(ClientRequest::DeleteFromLibrary(ItemId::PlaylistFolder(
+                    folder.current_id,
+                )))?;
+                ui.popup = None;
+                Ok(true)
+            }
+            _ => Ok(false),
+        },
     }
 }
 
