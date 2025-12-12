@@ -5,7 +5,7 @@ authors = ["Thang Pham <phamducthang1234@gmail.com>"]
 edition = "2021"
 license = "MIT"
 description = "A Spotify player in the terminal with full feature parity"
-repository = "https://github.com/aome510/spotify-player"
+repository = "https://github.com/rozatheriviter/spotify-player-tui"
 keywords = ["spotify", "tui", "ratatui", "player"]
 readme = "../README.md"
 

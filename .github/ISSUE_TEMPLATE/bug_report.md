@@ -18,7 +18,7 @@ A clear and concise description of what you expected to happen.
 **Log and backtrace**
 Log and backtrace of a run reproducing the bug to help debug the issue, which are usually located in `$HOME/.cache/spotify-player/`.
 
-Please refer to [this URL](https://github.com/aome510/spotify-player?tab=readme-ov-file#logging) for more details.
+Please refer to [this URL](https://github.com/rozatheriviter/spotify-player-tui?tab=readme-ov-file#logging) for more details.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
