@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/spotify_player:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/1337spotify:latest
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

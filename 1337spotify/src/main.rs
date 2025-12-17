@@ -43,14 +43,14 @@ fn init_logging(log_folder: &std::path::Path) -> Result<()> {
     }
 
     let log_prefix = format!(
-        "spotify-player-{}",
+        "1337spotify-{}",
         chrono::Local::now().format("%y-%m-%d-%H-%M")
     );
 
     // initialize the application's logging
     if std::env::var("RUST_LOG").is_err() {
         // default to log the current crate and librespot crates
-        std::env::set_var("RUST_LOG", "spotify_player=info,librespot=info");
+        std::env::set_var("RUST_LOG", "1337spotify=info,librespot=info");
     }
     if !log_folder.exists() {
         std::fs::create_dir_all(log_folder)?;
@@ -99,7 +99,7 @@ async fn start_app(state: &state::SharedState) -> Result<()> {
     {
         // set environment variables for PulseAudio
         if std::env::var("PULSE_PROP_application.name").is_err() {
-            std::env::set_var("PULSE_PROP_application.name", "spotify-player");
+            std::env::set_var("PULSE_PROP_application.name", "1337spotify");
         }
         if std::env::var("PULSE_PROP_application.icon_name").is_err() {
             std::env::set_var("PULSE_PROP_application.icon_name", "spotify");

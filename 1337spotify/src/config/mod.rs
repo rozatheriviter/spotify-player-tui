@@ -1,8 +1,8 @@
 mod keymap;
 mod theme;
 
-const DEFAULT_CONFIG_FOLDER: &str = ".config/spotify-player";
-const DEFAULT_CACHE_FOLDER: &str = ".cache/spotify-player";
+const DEFAULT_CONFIG_FOLDER: &str = ".config/1337spotify";
+const DEFAULT_CACHE_FOLDER: &str = ".cache/1337spotify";
 const APP_CONFIG_FILE: &str = "app.toml";
 const THEME_CONFIG_FILE: &str = "theme.toml";
 const KEYMAP_CONFIG_FILE: &str = "keymap.toml";
@@ -347,7 +347,7 @@ impl Default for AppConfig {
 
             enable_cover_image_cache: true,
 
-            default_device: "spotify-player".to_string(),
+            default_device: "1337spotify".to_string(),
 
             device: DeviceConfig::default(),
 
@@ -364,7 +364,7 @@ impl Default for AppConfig {
 impl Default for DeviceConfig {
     fn default() -> Self {
         Self {
-            name: "spotify-player".to_string(),
+            name: "1337spotify".to_string(),
             device_type: "speaker".to_string(),
             volume: 70,
             bitrate: 320,

@@ -54,18 +54,18 @@ jobs:
           cd target/${{ matrix.target }}/release
           case ${{ matrix.target }} in
           *-pc-windows-*)
-            7z -y a spotify_player-${{ matrix.target }}.zip spotify_player.exe
-            sha256sum spotify_player-${{ matrix.target }}.zip > spotify_player-${{ matrix.target }}.sha256
+            7z -y a 1337spotify-${{ matrix.target }}.zip 1337spotify.exe
+            sha256sum 1337spotify-${{ matrix.target }}.zip > 1337spotify-${{ matrix.target }}.sha256
             ;;
           *)
-            tar czvf spotify_player-${{ matrix.target }}.tar.gz spotify_player
-            shasum -a 256 spotify_player-${{ matrix.target }}.tar.gz > spotify_player-${{ matrix.target }}.sha256
+            tar czvf 1337spotify-${{ matrix.target }}.tar.gz 1337spotify
+            shasum -a 256 1337spotify-${{ matrix.target }}.tar.gz > 1337spotify-${{ matrix.target }}.sha256
             ;;
           esac;
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: target/${{ matrix.target }}/release/spotify_player-*
+          files: target/${{ matrix.target }}/release/1337spotify-*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

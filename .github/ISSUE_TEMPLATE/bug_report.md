@@ -16,9 +16,9 @@ Steps to reproduce the bug.
 A clear and concise description of what you expected to happen.
 
 **Log and backtrace**
-Log and backtrace of a run reproducing the bug to help debug the issue, which are usually located in `$HOME/.cache/spotify-player/`.
+Log and backtrace of a run reproducing the bug to help debug the issue, which are usually located in `$HOME/.cache/1337spotify/`.
 
-Please refer to [this URL](https://github.com/aome510/spotify-player?tab=readme-ov-file#logging) for more details.
+Please refer to [this URL](https://github.com/rozatheriviter/1337spotify-tui?tab=readme-ov-file#logging) for more details.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
@@ -27,7 +27,7 @@ If applicable, add screenshots to help explain your problem.
 
 - OS:
 - Application version:
-- Application features: if applicable, provide [cargo features](https://doc.rust-lang.org/cargo/reference/features.html) used to build `spotify_player`
+- Application features: if applicable, provide [cargo features](https://doc.rust-lang.org/cargo/reference/features.html) used to build `1337spotify`
 
 **Additional context**
 Add any other context about the problem here.
