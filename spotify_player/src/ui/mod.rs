@@ -29,6 +29,7 @@ mod playback;
 mod popup;
 pub mod single_line_input;
 pub mod utils;
+mod visualizer;
 
 /// Run the application UI
 pub fn run(state: &SharedState) -> Result<()> {
