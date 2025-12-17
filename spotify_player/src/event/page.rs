@@ -35,7 +35,7 @@ pub fn handle_key_sequence_for_page(
             }
             PageType::Albums => handle_command_for_albums_page(command, client_pub, ui, state),
             PageType::Artists => handle_command_for_artists_page(command, client_pub, ui, state),
-            PageType::Playback => Ok(false),
+            PageType::Playback => handle_command_for_playback_page(command, client_pub, ui, state),
         },
         Some(CommandOrAction::Action(action, ActionTarget::SelectedItem)) => match page_type {
             PageType::Search => anyhow::bail!("page search type should already be handled!"),
@@ -375,6 +375,50 @@ fn handle_command_for_artists_page(
         &data,
         ui,
     ))
+}
+
+fn handle_command_for_playback_page(
+    command: Command,
+    _client_pub: &flume::Sender<ClientRequest>,
+    ui: &mut UIStateGuard,
+    _state: &SharedState,
+) -> Result<bool> {
+    match command {
+        Command::SelectNextOrScrollDown | Command::SelectPreviousOrScrollUp => {
+            // cycle through visualizer types
+            // Since navigation is "vertical" but "arrows to change visualizer" usually implies left/right,
+            // let's check what keys map to these commands.
+            // But wait, the user specifically said "use arrows to change visualizer".
+            // Left/Right arrows are typically NextTrack/PreviousTrack in global commands.
+            // If we are in Playback page, maybe we want to override them?
+            // However, the `handle_key_sequence_for_page` first looks for commands.
+            // If the user mapped Arrows to SelectNext/Prev, this will catch it.
+            // If they mapped Arrows to NextTrack/Prev, `handle_global_command` will catch it later.
+            // The memory says "Right to enter/select, Left to go back".
+
+            // Let's implement cycling visualizer on SelectNext/Previous which usually map to j/k or Up/Down.
+            // If the user wants Left/Right, they might need to remap or we need to intercept specific keys.
+            // But strict "arrow keys" usually means Up/Down/Left/Right.
+            // In the context of "visualizer options", usually Left/Right makes sense for "previous/next option".
+
+            // Let's look at how keymaps are defined.
+            // Default might map Left/Right to Seek or Prev/Next Track.
+
+            // If I look at `handle_key_sequence_for_page`, it tries to find a command from key sequence.
+
+            // For now, let's assume `SelectNextOrScrollDown` / `SelectPreviousOrScrollUp` cycles visualizers.
+            if command == Command::SelectNextOrScrollDown {
+                ui.visualizer_type = ui.visualizer_type.next();
+                return Ok(true);
+            }
+            if command == Command::SelectPreviousOrScrollUp {
+                ui.visualizer_type = ui.visualizer_type.previous();
+                return Ok(true);
+            }
+            Ok(false)
+        },
+        _ => Ok(false)
+    }
 }
 
 fn handle_key_sequence_for_search_page(

@@ -42,8 +42,33 @@ pub struct UIState {
     /// Count prefix for vim-style navigation (e.g., 5j, 10k)
     pub count_prefix: Option<usize>,
 
+    pub visualizer_type: VisualizerType,
+
     #[cfg(feature = "image")]
     pub last_cover_image_render_info: ImageRenderInfo,
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub enum VisualizerType {
+    #[default]
+    Bar,
+    Wave,
+}
+
+impl VisualizerType {
+    pub fn next(&self) -> Self {
+        match self {
+            Self::Bar => Self::Wave,
+            Self::Wave => Self::Bar,
+        }
+    }
+
+    pub fn previous(&self) -> Self {
+        match self {
+            Self::Bar => Self::Wave,
+            Self::Wave => Self::Bar,
+        }
+    }
 }
 
 impl UIState {
@@ -121,6 +146,8 @@ impl Default for UIState {
             playback_progress_bar_rect: Rect::default(),
 
             count_prefix: None,
+
+            visualizer_type: VisualizerType::default(),
 
             #[cfg(feature = "image")]
             last_cover_image_render_info: ImageRenderInfo::default(),

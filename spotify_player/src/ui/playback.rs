@@ -1,7 +1,7 @@
 use super::{
-    config, utils::construct_and_render_block, Borders, Constraint, Frame, Gauge, Layout, Line,
-    LineGauge, Modifier, Paragraph, PlaybackMetadata, Rect, SharedState, Span, Style, Text,
-    UIStateGuard, Wrap,
+    config, utils::construct_and_render_block, visualizer::render_visualizer, Borders, Constraint, Frame, Gauge,
+    Layout, Line, LineGauge, Modifier, Paragraph, PlaybackMetadata, Rect, SharedState, Span, Style,
+    Text, UIStateGuard, Wrap,
 };
 #[cfg(feature = "image")]
 use crate::state::ImageRenderInfo;
@@ -27,23 +27,23 @@ pub fn render_playback_window(
     let player = state.player.read();
     if let Some(ref playback) = player.playback {
         if let Some(item) = &playback.item {
-            let (metadata_rect, progress_bar_rect) = {
+            let (metadata_rect, visualizer_rect, progress_bar_rect) = {
                 // Render the track's cover image if `image` feature is enabled
                 #[cfg(feature = "image")]
                 {
                     let configs = config::get_config();
                     // Split the allocated rectangle into `metadata_rect`, `cover_img_rect` and `progress_bar_rect`
-                    let (metadata_rect, cover_img_rect, progress_bar_rect) =
+                    let (metadata_rect, cover_img_rect, visualizer_rect, progress_bar_rect) =
                         match configs.app_config.progress_bar_position {
                             config::ProgressBarPosition::Bottom => {
-                                let ver_chunks = split_rect_for_progress_bar(rect); // rect, progress_bar_rect
+                                let ver_chunks = split_rect_for_progress_bar(rect); // metadata_rect (with potential image split), visualizer_rect, progress_bar_rect
                                 let hor_chunks = split_rect_for_cover_img(ver_chunks.0); // cover_img_rect, metadata_rect
-                                (hor_chunks.1, hor_chunks.0, ver_chunks.1)
+                                (hor_chunks.1, hor_chunks.0, ver_chunks.1, ver_chunks.2)
                             }
                             config::ProgressBarPosition::Right => {
                                 let hor_chunks = split_rect_for_cover_img(rect); // cover_img_rect, rect
-                                let ver_chunks = split_rect_for_progress_bar(hor_chunks.1); // metadata_rect, progress_bar_rect
-                                (ver_chunks.0, hor_chunks.0, ver_chunks.1)
+                                let ver_chunks = split_rect_for_progress_bar(hor_chunks.1); // metadata_rect, visualizer_rect, progress_bar_rect
+                                (ver_chunks.0, hor_chunks.0, ver_chunks.1, ver_chunks.2)
                             }
                         };
 
@@ -103,13 +103,12 @@ pub fn render_playback_window(
                             }
                         }
                     }
-                    (metadata_rect, progress_bar_rect)
+                    (metadata_rect, visualizer_rect, progress_bar_rect)
                 }
 
                 #[cfg(not(feature = "image"))]
                 {
-                    let chunks = split_rect_for_progress_bar(rect);
-                    (chunks.0, chunks.1)
+                    split_rect_for_progress_bar(rect)
                 }
             };
 
@@ -118,6 +117,8 @@ pub fn render_playback_window(
                 let playback_desc = Paragraph::new(playback_text);
                 frame.render_widget(playback_desc, metadata_rect);
             }
+
+            render_visualizer(frame, ui, visualizer_rect);
 
             let duration = match item {
                 rspotify::model::PlayableItem::Track(track) => track.duration,
@@ -164,9 +165,11 @@ pub fn render_playback_window(
     other_rect
 }
 
-fn split_rect_for_progress_bar(rect: Rect) -> (Rect, Rect) {
-    let chunks = Layout::vertical([Constraint::Fill(0), Constraint::Length(1)]).split(rect);
-    (chunks[0], chunks[1])
+fn split_rect_for_progress_bar(rect: Rect) -> (Rect, Rect, Rect) {
+    // Split the rect into 3 parts: metadata (top), visualizer (middle, fixed height), progress bar (bottom, 1 line)
+    // We allocate some space for the visualizer above the progress bar.
+    let chunks = Layout::vertical([Constraint::Fill(0), Constraint::Length(3), Constraint::Length(1)]).split(rect);
+    (chunks[0], chunks[1], chunks[2])
 }
 
 #[cfg(feature = "image")]
