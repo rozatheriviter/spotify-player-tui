@@ -34,7 +34,7 @@ compile_error!("Streaming feature is enabled but no audio backend has been selec
     rodiojack-backend,
     sdl-backend,
     gstreamer-backend
-For more information, visit https://github.com/aome510/spotify-player?tab=readme-ov-file#streaming
+For more information, visit https://github.com/rozatheriviter/1337spotify-tui?tab=readme-ov-file#streaming
 ");
 
 #[derive(Debug, Serialize)]
@@ -201,7 +201,7 @@ pub async fn new_connection(
             while let Some(event) = channel.recv().await {
                 match PlayerEvent::from_librespot_player_event(event) {
                     Err(err) => {
-                        tracing::warn!("Failed to convert a `librespot` player event into `spotify_player` player event: {err:#}");
+                        tracing::warn!("Failed to convert a `librespot` player event into `1337spotify` player event: {err:#}");
                     }
                     Ok(Some(event)) => {
                         tracing::info!("Got a new player event: {event:?}");

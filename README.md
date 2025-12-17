@@ -1,6 +1,8 @@
-# spotify_player
+# 1337spotify
 
-**spotify_player** is a fast, easy to use, and configurable Spotify player in the terminal. It is designed to be a full-featured Spotify client, supporting streaming, playlist management, lyrics, and more.
+**Forked and rebranded by RozaTheRiviter (2025 Edition).**
+
+**1337spotify** is a fast, easy to use, and configurable Spotify player in the terminal. It is designed to be a full-featured Spotify client, supporting streaming, playlist management, lyrics, and more.
 
 ## Navigation
 
@@ -35,7 +37,7 @@ sudo apt install build-essential pkg-config libssl-dev libasound2-dev libdbus-1-
 ### From Source
 
 ```bash
-cargo install spotify_player --features "streaming media-control"
+cargo install 1337spotify --features "streaming media-control"
 ```
 
 ## Keybindings

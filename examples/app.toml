@@ -14,7 +14,7 @@ enable_streaming = "Always"
 enable_notify = true
 enable_cover_image_cache = true
 notify_streaming_only = false
-default_device = "spotify-player"
+default_device = "1337spotify"
 play_icon = "▶"
 pause_icon = "▌▌"
 liked_icon = "♥"
@@ -25,7 +25,7 @@ cover_img_pixels = 16
 seek_duration_secs = 5
 
 [device]
-name = "spotify-player"
+name = "1337spotify"
 device_type = "speaker"
 volume = 70
 bitrate = 320

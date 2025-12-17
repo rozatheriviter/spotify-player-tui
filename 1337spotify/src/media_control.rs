@@ -86,7 +86,7 @@ pub fn start_event_watcher(
     };
 
     let config = PlatformConfig {
-        dbus_name: "spotify_player",
+        dbus_name: "1337spotify",
         display_name: "Spotify Player",
         hwnd,
     };

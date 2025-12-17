@@ -151,7 +151,7 @@ fn try_connect_to_client(socket: &UdpSocket, configs: &config::Configs) -> Resul
     socket.send(&[])?;
     if let Err(err) = socket.recv(&mut [0; 1]) {
         if let std::io::ErrorKind::ConnectionRefused = err.kind() {
-            // no running `spotify_player` instance found,
+            // no running `1337spotify` instance found,
             // initialize a new client to handle the current CLI command
 
             let rt = tokio::runtime::Runtime::new()?;

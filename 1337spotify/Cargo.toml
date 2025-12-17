@@ -1,13 +1,18 @@
 [package]
-name = "spotify_player"
+name = "leetspeak-spotify"
 version = "0.21.2"
-authors = ["Thang Pham <phamducthang1234@gmail.com>"]
+authors = ["RozaTheRiviter"]
 edition = "2021"
 license = "MIT"
-description = "A Spotify player in the terminal with full feature parity"
-repository = "https://github.com/aome510/spotify-player"
-keywords = ["spotify", "tui", "ratatui", "player"]
+description = "A Spotify player in the terminal with full feature parity (2025 Edition)"
+repository = "https://github.com/rozatheriviter/1337spotify-tui"
+keywords = ["spotify", "tui", "ratatui", "player", "1337spotify"]
 readme = "../README.md"
+default-run = "1337spotify"
+
+[[bin]]
+name = "1337spotify"
+path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.100"

@@ -70,7 +70,7 @@ impl AppClient {
 
         // Construct user-provided client.
         // This custom client is needed for Spotify Connect integration because the Spotify client (`AppConfig::spotify`),
-        // which `spotify-player` uses to retrieve Spotify data, doesn't have access to user available devices
+        // which `1337spotify` uses to retrieve Spotify data, doesn't have access to user available devices
         let mut user_client = configs.app_config.get_user_client_id()?.clone().map(|id| {
             let creds = rspotify::Credentials { id, secret: None };
             let oauth = rspotify::OAuth {
@@ -253,7 +253,7 @@ impl AppClient {
                 }
                 let device_id = playback.as_ref().and_then(|p| p.device_id.as_deref());
                 self.start_playback(p, device_id).await?;
-                // For some reasons, when starting a new playback, the integrated `spotify_player`
+                // For some reasons, when starting a new playback, the integrated `1337spotify`
                 // client doesn't respect the initial shuffle state, so we need to manually update the state
                 if let Some(ref playback) = playback {
                     self.shuffle(playback.shuffle_state, device_id).await?;
@@ -662,7 +662,7 @@ impl AppClient {
         match &self.user_client {
             None => {
                 tracing::warn!("User-provided client integration is not enabled, no device found.");
-                tracing::warn!("Please make sure you setup Spotify Connect as described in https://github.com/aome510/spotify-player#spotify-connect.");
+                tracing::warn!("Please make sure you setup Spotify Connect as described in https://github.com/rozatheriviter/1337spotify-tui#spotify-connect.");
                 Ok(vec![])
             }
             Some(client) => Ok(client.device().await?),
@@ -1843,7 +1843,7 @@ impl AppClient {
 
         let configs = config::get_config();
 
-        n.appname("spotify_player")
+        n.appname("1337spotify")
             .summary(&get_text_from_format_str(
                 &configs.app_config.notify_format.summary,
             ))

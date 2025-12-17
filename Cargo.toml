@@ -1,5 +1,5 @@
 [workspace]
-members = ["spotify_player", "lyric_finder"]
+members = ["1337spotify", "lyric_finder"]
 resolver = "2"
 
 [profile.release]

@@ -4,7 +4,7 @@ set -eux -o pipefail
 
 cd "$( dirname -- "${BASH_SOURCE[0]}" )" && cd ..
 
-crate="${1:-spotify_player}"
+crate="${1:-1337spotify}"
 
 git checkout master && git fetch && git merge origin/master
 
