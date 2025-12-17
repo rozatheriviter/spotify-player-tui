@@ -35,7 +35,7 @@ sudo apt install build-essential pkg-config libssl-dev libasound2-dev libdbus-1-
 ### From Source
 
 ```bash
-cargo install spotify_player --features "streaming media-control lyric-finder"
+cargo install spotify_player --features "streaming media-control"
 ```
 
 ## Keybindings
