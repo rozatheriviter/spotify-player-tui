@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use librespot_core::session::Session;
-use maybe_async::maybe_async;
+use async_trait::async_trait;
 use rspotify::{
     clients::{BaseClient, OAuthClient},
     http::HttpClient,
@@ -79,10 +79,7 @@ impl Spotify {
     }
 }
 
-// TODO: remove the below uses of `maybe_async` crate once
-// async trait is fully supported in stable Rust.
-
-#[maybe_async]
+#[async_trait]
 impl BaseClient for Spotify {
     fn get_http(&self) -> &HttpClient {
         &self.http
@@ -127,7 +124,7 @@ impl BaseClient for Spotify {
 /// using an access token that is manually retrieved by
 /// the `librespot::get_token` function, implementing
 /// `OAuthClient::get_oauth` and `OAuthClient::request_token` is unnecessary
-#[maybe_async]
+#[async_trait]
 impl OAuthClient for Spotify {
     fn get_oauth(&self) -> &OAuth {
         panic!("`OAuthClient::get_oauth` should never be called!")
