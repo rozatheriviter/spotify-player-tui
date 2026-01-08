@@ -285,7 +285,19 @@ fn handle_command_for_playlists_page(
         return Ok(true);
     }
 
-    // TODO: support sorting
+    if command == Command::SortLibraryAlphabetically {
+        let mut data = state.data.write();
+
+        // Sort playlists alphabetically, keeping folders on top
+        // This sorts the global list, which affects the order of items in all folders
+        // because `folder_playlists_items` preserves the original order of the list.
+        data.user_data.playlists.sort_by_cached_key(|item| match item {
+            PlaylistFolderItem::Folder(f) => (0, f.name.to_lowercase()),
+            PlaylistFolderItem::Playlist(p) => (1, p.name.to_lowercase()),
+        });
+        return Ok(true);
+    }
+
 
     let folder_id = match ui.current_page() {
         PageState::Playlists { state } => state.folder_id,
