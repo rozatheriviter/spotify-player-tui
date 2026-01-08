@@ -56,14 +56,14 @@ pub enum VisualizerType {
 }
 
 impl VisualizerType {
-    pub fn next(&self) -> Self {
+    pub fn next(self) -> Self {
         match self {
             Self::Bar => Self::Wave,
             Self::Wave => Self::Bar,
         }
     }
 
-    pub fn previous(&self) -> Self {
+    pub fn previous(self) -> Self {
         match self {
             Self::Bar => Self::Wave,
             Self::Wave => Self::Bar,

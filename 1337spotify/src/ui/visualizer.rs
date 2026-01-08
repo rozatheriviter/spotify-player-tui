@@ -29,7 +29,7 @@ fn render_bar_visualizer(frame: &mut Frame, ui: &UIStateGuard, rect: Rect) {
     let data: Vec<(&str, u64)> = (0..n_bars)
         .map(|i| {
             // Create a more organic wave pattern using sine waves
-            let x = i as f64;
+            let x = f64::from(i);
             let t = time as f64 / 100.0;
 
             // Combine multiple sine waves for a more complex pattern
@@ -38,7 +38,7 @@ fn render_bar_visualizer(frame: &mut Frame, ui: &UIStateGuard, rect: Rect) {
             let wave3 = ((x * 0.1 + t * 0.2).sin() + 1.0) * 5.0;
 
             // Add some noise based on index to simulate frequency bands
-            let noise = ((i * 7) % 13) as f64;
+            let noise = f64::from((i * 7) % 13);
 
             let val = (wave1 + wave2 + wave3 + noise) as u64;
             ("", val.min(100))
@@ -67,7 +67,7 @@ fn render_wave_visualizer(frame: &mut Frame, ui: &UIStateGuard, rect: Rect) {
 
     let points: Vec<(f64, f64)> = (0..rect.width)
         .map(|i| {
-            let x = i as f64;
+            let x = f64::from(i);
             let y = ((x * 0.2 + time).sin() * 50.0) + 50.0;
             (x, y)
         })
@@ -75,7 +75,7 @@ fn render_wave_visualizer(frame: &mut Frame, ui: &UIStateGuard, rect: Rect) {
 
     let points2: Vec<(f64, f64)> = (0..rect.width)
         .map(|i| {
-            let x = i as f64;
+            let x = f64::from(i);
             let y = ((x * 0.3 - time * 1.5).sin() * 40.0) + 50.0;
             (x, y)
         })
@@ -96,7 +96,7 @@ fn render_wave_visualizer(frame: &mut Frame, ui: &UIStateGuard, rect: Rect) {
 
     let chart = Chart::new(datasets)
         .block(Block::default().borders(Borders::NONE))
-        .x_axis(Axis::default().bounds([0.0, rect.width as f64]))
+        .x_axis(Axis::default().bounds([0.0, f64::from(rect.width)]))
         .y_axis(Axis::default().bounds([0.0, 100.0]));
 
     frame.render_widget(chart, rect);
