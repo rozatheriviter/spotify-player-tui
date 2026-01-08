@@ -34,8 +34,12 @@ pub fn handle_key_sequence_for_page(
                 handle_command_for_playlists_page(command, client_pub, ui, state)
             }
             PageType::Albums => handle_command_for_albums_page(command, client_pub, ui, state),
-            PageType::Artists => handle_command_for_artists_page(command, client_pub, ui, state),
-            PageType::Playback => handle_command_for_playback_page(command, client_pub, ui, state),
+            PageType::Artists => Ok(handle_command_for_artists_page(
+                command, client_pub, ui, state,
+            )),
+            PageType::Playback => Ok(handle_command_for_playback_page(
+                command, client_pub, ui, state,
+            )),
         },
         Some(CommandOrAction::Action(action, ActionTarget::SelectedItem)) => match page_type {
             PageType::Search => anyhow::bail!("page search type should already be handled!"),
@@ -276,7 +280,7 @@ fn handle_action_for_playlists_page(
 
 fn handle_command_for_playlists_page(
     command: Command,
-    client_pub: &flume::Sender<ClientRequest>,
+    _client_pub: &flume::Sender<ClientRequest>,
     ui: &mut UIStateGuard,
     state: &SharedState,
 ) -> Result<bool> {
@@ -404,19 +408,19 @@ fn handle_command_for_artists_page(
     _client_pub: &flume::Sender<ClientRequest>,
     ui: &mut UIStateGuard,
     state: &SharedState,
-) -> Result<bool> {
+) -> bool {
     if command == Command::Search {
         ui.new_search_popup();
-        return Ok(true);
+        return true;
     }
 
     let data = state.data.read();
-    Ok(window::handle_command_for_artist_list_window(
+    window::handle_command_for_artist_list_window(
         command,
         &ui.search_filtered_items(&data.user_data.followed_artists),
         &data,
         ui,
-    ))
+    )
 }
 
 fn handle_command_for_playback_page(
@@ -424,7 +428,7 @@ fn handle_command_for_playback_page(
     _client_pub: &flume::Sender<ClientRequest>,
     ui: &mut UIStateGuard,
     _state: &SharedState,
-) -> Result<bool> {
+) -> bool {
     match command {
         Command::SelectNextOrScrollDown | Command::SelectPreviousOrScrollUp => {
             // cycle through visualizer types
@@ -451,15 +455,15 @@ fn handle_command_for_playback_page(
             // For now, let's assume `SelectNextOrScrollDown` / `SelectPreviousOrScrollUp` cycles visualizers.
             if command == Command::SelectNextOrScrollDown {
                 ui.visualizer_type = ui.visualizer_type.next();
-                return Ok(true);
+                return true;
             }
             if command == Command::SelectPreviousOrScrollUp {
                 ui.visualizer_type = ui.visualizer_type.previous();
-                return Ok(true);
+                return true;
             }
-            Ok(false)
-        },
-        _ => Ok(false)
+            false
+        }
+        _ => false,
     }
 }
 

@@ -37,7 +37,7 @@ pub fn render_home_page(frame: &mut Frame, ui: &mut UIStateGuard, rect: Rect) {
     let rect = construct_and_render_block("Home", &ui.theme, Borders::ALL, frame, rect);
     let items = HOME_PAGE_OPTIONS
         .iter()
-        .map(|s| (s.to_string(), false))
+        .map(|s| ((*s).to_string(), false))
         .collect();
     let (list, len) = utils::construct_list_widget(&ui.theme, items, true);
 
@@ -672,7 +672,7 @@ pub fn render_playback_page(
                      lines.push(Line::from(vec![Span::styled(format!("Episode: {}", e.name), ui.theme.playback_track())]));
                      lines.push(Line::from(vec![Span::styled(format!("Show: {}", e.show.name), ui.theme.playback_album())]));
                  },
-                 _ => {},
+                 rspotify::model::PlayableItem::Unknown(_) => {},
              }
 
              // Add progress bar
@@ -680,13 +680,12 @@ pub fn render_playback_page(
                  let duration = match item {
                     rspotify::model::PlayableItem::Track(t) => t.duration,
                     rspotify::model::PlayableItem::Episode(e) => e.duration,
-                    _ => chrono::Duration::zero(),
+                    rspotify::model::PlayableItem::Unknown(_) => chrono::Duration::zero(),
                  };
                  lines.push(Line::from(format!("{}/{}", crate::utils::format_duration(&progress), crate::utils::format_duration(&duration))));
              }
 
-             use ratatui::layout::Margin;
-             frame.render_widget(Paragraph::new(lines).block(Block::default().borders(Borders::NONE)), info_rect.inner(Margin { horizontal: 1, vertical: 1 }));
+             frame.render_widget(Paragraph::new(lines).block(Block::default().borders(Borders::NONE)), info_rect.inner(ratatui::layout::Margin { horizontal: 1, vertical: 1 }));
         } else {
              frame.render_widget(Paragraph::new("No item playing"), info_rect);
         }

@@ -34,7 +34,7 @@ pub use handlers::*;
 pub use request::*;
 use serde::Deserialize;
 
-const SPOTIFY_API_ENDPOINT: &str = "https://api.spotify.com/v1";
+// const SPOTIFY_API_ENDPOINT: &str = "https://api.spotify.com/v1";
 const PLAYBACK_TYPES: [&rspotify::model::AdditionalType; 2] = [
     &rspotify::model::AdditionalType::Track,
     &rspotify::model::AdditionalType::Episode,
