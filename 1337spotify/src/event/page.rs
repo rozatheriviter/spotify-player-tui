@@ -285,7 +285,49 @@ fn handle_command_for_playlists_page(
         return Ok(true);
     }
 
-    // TODO: support sorting
+    if command == Command::SortLibraryAlphabetically {
+        let mut data = state.data.write();
+
+        // Sort playlists alphabetically, keeping folders on top
+        data.user_data.playlists.sort_by(|a, b| match (a, b) {
+            (PlaylistFolderItem::Folder(_), PlaylistFolderItem::Playlist(_)) => {
+                std::cmp::Ordering::Less
+            }
+            (PlaylistFolderItem::Playlist(_), PlaylistFolderItem::Folder(_)) => {
+                std::cmp::Ordering::Greater
+            }
+            _ => a
+                .to_string()
+                .to_lowercase()
+                .cmp(&b.to_string().to_lowercase()),
+        });
+        return Ok(true);
+    }
+
+    if command == Command::SortLibraryByRecent {
+        let mut data = state.data.write();
+
+        // Sort playlists by `current_folder_id` and then by `snapshot_id`
+        data.user_data.playlists.sort_by(|a, b| {
+            match (a, b) {
+                (PlaylistFolderItem::Playlist(p1), PlaylistFolderItem::Playlist(p2)) => {
+                    if p1.current_folder_id == p2.current_folder_id {
+                        p1.snapshot_id.cmp(&p2.snapshot_id)
+                    } else {
+                        p1.current_folder_id.cmp(&p2.current_folder_id)
+                    }
+                }
+                (PlaylistFolderItem::Folder(_), PlaylistFolderItem::Playlist(_)) => {
+                    std::cmp::Ordering::Less
+                }
+                (PlaylistFolderItem::Playlist(_), PlaylistFolderItem::Folder(_)) => {
+                    std::cmp::Ordering::Greater
+                }
+                _ => std::cmp::Ordering::Equal, // Keep folders in place
+            }
+        });
+        return Ok(true);
+    }
 
     let folder_id = match ui.current_page() {
         PageState::Playlists { state } => state.folder_id,
