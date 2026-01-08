@@ -1305,16 +1305,23 @@ impl AppClient {
                     .await?;
             }
             ItemId::PlaylistFolder(id) => {
-                state
-                    .data
-                    .write()
-                    .user_data
-                    .playlists
-                    .retain(|item| match item {
-                        PlaylistFolderItem::Playlist(_) => true,
-                        PlaylistFolderItem::Folder(f) => f.current_id != id,
-                    });
-                // TODO: persist the change to the disk
+                let playlists = {
+                    let mut data = state.data.write();
+                    data.user_data
+                        .playlists
+                        .retain(|item| match item {
+                            PlaylistFolderItem::Playlist(_) => true,
+                            PlaylistFolderItem::Folder(f) => f.current_id != id,
+                        });
+                    data.user_data.playlists.clone()
+                };
+
+                store_data_into_file_cache(
+                    FileCacheKey::Playlists,
+                    &config::get_config().cache_folder,
+                    &playlists,
+                )
+                .context("persist user's playlists to disk")?;
             }
         }
         Ok(())
